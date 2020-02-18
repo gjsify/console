@@ -1,3 +1,13 @@
+/*
+  ┌─────────────┐
+  │   Missing   │
+  └─────────────┘
+  console.group
+  console.groupCollapsed
+  console.groupEnd()
+  no Console constructor
+*/
+
 /*global window, global*/
 var util = require("util")
 var assert = require("assert")
@@ -11,6 +21,12 @@ if (typeof global !== "undefined" && global.console) {
     console = global.console
 } else if (typeof window !== "undefined" && window.console) {
     console = window.console
+} else if (typeof print === "function" && typeof printerr === "function") {
+    // gjs runtime
+    console = {
+        log: print,
+        warn: printerr,
+    }
 } else {
     console = {}
 }
@@ -18,6 +34,7 @@ if (typeof global !== "undefined" && global.console) {
 var functions = [
     [log, "log"],
     [info, "info"],
+    [debug, "debug"],
     [warn, "warn"],
     [error, "error"],
     [time, "time"],
@@ -27,18 +44,6 @@ var functions = [
     [consoleAssert, "assert"]
 ]
 
-for (var i = 0; i < functions.length; i++) {
-    var tuple = functions[i]
-    var f = tuple[0]
-    var name = tuple[1]
-
-    if (!console[name]) {
-        console[name] = f
-    }
-}
-
-module.exports = console
-
 function log() {}
 
 function info() {
@@ -46,6 +51,10 @@ function info() {
 }
 
 function warn() {
+    console.log.apply(console, arguments)
+}
+
+function debug() {
     console.log.apply(console, arguments)
 }
 
@@ -85,3 +94,25 @@ function consoleAssert(expression) {
         assert.ok(false, util.format.apply(null, arr))
     }
 }
+
+for (var i = 0; i < functions.length; i++) {
+    var tuple = functions[i]
+    var f = tuple[0]
+    var name = tuple[1]
+
+    if (!console[name]) {
+        console[name] = f
+    }
+}
+
+// Set console globally
+if (typeof global !== "undefined" && typeof global.console === "undefined") {
+    console.debug('set to global');
+    console.dir(global)
+    global.console = console;
+} else if (typeof window !== "undefined" && typeof window.console === "undefined") {
+    console.debug('set to window');
+    window.console = console;
+}
+
+module.exports = console
