@@ -105,14 +105,4 @@ for (var i = 0; i < functions.length; i++) {
     }
 }
 
-// Set console globally
-if (typeof global !== "undefined" && typeof global.console === "undefined") {
-    console.debug('set to global');
-    console.dir(global)
-    global.console = console;
-} else if (typeof window !== "undefined" && typeof window.console === "undefined") {
-    console.debug('set to window');
-    window.console = console;
-}
-
 module.exports = console
