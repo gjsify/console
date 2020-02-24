@@ -1,7 +1,7 @@
 {
-  "name": "console-browserify",
-  "version": "1.2.0",
-  "description": "Emulate console for all the browsers",
+  "name": "@gjsify/console",
+  "version": "0.0.1",
+  "description": "Emulate console for gjs",
   "keywords": [],
   "author": "Raynos <raynos2@gmail.com>",
   "repository": "git://github.com/browserify/console-browserify.git",
